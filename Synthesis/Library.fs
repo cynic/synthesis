@@ -32,7 +32,7 @@ let ofTime hours minutes seconds =
      (hours * 60 * 60) + (minutes * 60) + seconds
 
 let toTime seconds =
-    match (sec =< 0) with
+    match (seconds <= 0) with
     |true -> (0,0,0)
     |false -> (seconds/3600),((seconds-(seconds/3600)*3600)/60),((seconds-(seconds/3600)*3600)-(((seconds-(seconds/3600)*3600))/60)*60)
     
@@ -57,10 +57,10 @@ let minmax (a,b,c,d) =
 let isLeap year = 
     match year > 1582 with
     | true -> failwith "The year is below 1582"
-    | _ -> match year % 100 = 0, year % 400 = 0, y % 4 = 0 with
-        |true, true, true -> true
-        |true, _ , true -> true
-        |_ -> false
+    | _ -> match year % 100 = 0, year % 400 = 0, year % 4 = 0 with
+                |true, true, true -> true
+                |true, _ , true -> true
+                |_ -> false
     
 
 let month m =
@@ -77,20 +77,18 @@ let month m =
     | 10 -> "October", 31
     | 11 -> "November", 30
     | 12 -> "December", 31
-    | _ -> Failwith "Invalid input"
+    | _ -> failwith "Invalid input"
 
-let toBinary n =
-    let rec binary n emp =
-    match n = 0, emp = "" with
-    | true, true -> "0"
-    | true, false -? empty
-    |_, _ -> match (n % 2 = 0) with
-        |true -> binary (n / 2) ("0" + s)
-        |false -> binary (n / 2) ("1" + s)
-    match n < 0 with
-        |true -> failwith "Negative input"
-        |_ -> binary n ""
-        
+let toBinary n = let rec func n emp =
+        match n = 0, emp = "" with
+            | true, true -> "0"
+            | true, false -> empty
+            |_, _ -> match (n % 2 = 0) with
+                        |true -> func (n / 2) ("0" + s)
+                        |false -> func (n / 2) ("1" + s)
+        match n < 0 with
+            |true -> failwith "Negative input"
+            |_ -> func n ""
 
 let bizFuzz n =
     let rec func i (a,b,c) = 
