@@ -6,9 +6,9 @@ let abelar a =
     
 
 let area b h =
-    match (b > 0.0) || (h > 0.0) with
-    | true -> (b * h) / 0.5
-    | _ -> failwith "Negative value"
+    match ((b >= 0.00) && (h >= 0.00)) with
+   | true -> 0.5 * b * h
+   | false -> failwith "Values below 0"
     
 
 let zollo x =
@@ -55,16 +55,17 @@ let minmax (a,b,c,d) =
     
 
 let isLeap year = 
-    match year > 1582 with
-    | true -> failwith "The year is below 1582"
-    | _ -> match year % 100 = 0, year % 400 = 0, year % 4 = 0 with
-                |true, true, true -> true
-                |true, _ , true -> true
-                |_ -> false
-    
+        match year >= 1582 with
+            |true -> match (year % 100 <> 0 && year % 4 = 0) with
+                        |true -> true
+                        | _ -> year % 400 = 0
+            | _ -> failwith "Invalid year"
+        
+       
+   
 
-let month m =
-    match m with 
+let month x =
+    match x with
     | 1 -> "January", 31
     | 2 -> "February", 28
     | 3 -> "March", 31
@@ -77,18 +78,18 @@ let month m =
     | 10 -> "October", 31
     | 11 -> "November", 30
     | 12 -> "December", 31
-    | _ -> failwith "Invalid input"
+    | _ -> failwith "fail"
 
-let toBinary n = let rec func n emp =
-        match n = 0, emp = "" with
-            | true, true -> "0"
-            | true, false -> empty
-            |_, _ -> match (n % 2 = 0) with
-                        |true -> func (n / 2) ("0" + s)
-                        |false -> func (n / 2) ("1" + s)
-        match n < 0 with
-            |true -> failwith "Negative input"
-            |_ -> func n ""
+let toBinary n = 
+    let rec binary number string=
+        match number < 0 with
+        |true-> failwith "Number below 0"
+        | _ -> match (number = 0 && string = "") with
+            |true-> string
+            |false-> match (number % 2 <> 0) with
+                     |true-> binary (number/2) ("1"+ string)
+                     |_-> binary (number/2) ("0"+ string)
+    binary n ""
 
 let bizFuzz n =
     let rec func i (a,b,c) = 
